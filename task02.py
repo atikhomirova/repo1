@@ -1,6 +1,11 @@
 # Task 02
 # Function to calculate Fibonacci numbers
 
+"""
+Anton:
+See the comments from the first branch.
+"""
+
 def fib(n):
    if n == 0:
        return 0
