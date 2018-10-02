@@ -6,15 +6,17 @@ Anton:
 See the comments from the first branch.
 """
 
-def fib(n):
-   if n == 0:
-       return 0
-   elif n == 1:
-       return 1
-   else:
-       return fib(n - 1) + fib(n - 2)
+if __name__ == "__main__":
+    def fib(n):
+        """Calculate first n elements of Fibonacchi sequence."""
+        if n == 0:
+            return 0
+        elif n == 1:
+            return 1
+        else:
+            return fib(n - 1) + fib(n - 2)
 
-n = 8
+    n = 8
 
-for i in range(n):
-    print(fib(i))
+    for i in range(n):
+        print(fib(i))
