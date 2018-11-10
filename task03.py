@@ -2,32 +2,50 @@
 
 # Убрать пробелы по краям строки 
 def trim_whitespaces(dct, name):
-    line = dct[name]
-    dct[name] = line.strip()
+    dct[name] = dct[name].strip() if dct.get(name) else ''
     return dct
+
 
 # Заменить несколько пробелов подряд на один пробел
 def remove_extra_whitespaces(dct, name):
-    line = dct[name]
-    dct[name] = ' '.join(line.split())
+    dct[name] = ' '.join(dct[name].split()) if dct.get(name) else ''
     return dct
 
+
 # Функция process должна вернуть None, если если строка в поле name содержит подстроку arg
-def skip_row_by_value(dct, name, arg):
-    if arg in dct[name]:
-        return None
-    else:
-        return dct
+def skip_row_with_value(dct, name, arg):
+    dct = None if arg in dct.get(name) else dct
+    return dct
 
 
-# Выполнить eval в зависимости от того, указан ли в конфиге рядом с
+cleansing_functions = {'trim_whitespaces': trim_whitespaces,
+                       'remove_extra_whitespaces': remove_extra_whitespaces,
+                       'skip_row_with_value': skip_row_with_value
+                   }
+
+
+# Вызвать функцию в зависимости от того, указан ли в конфиге рядом с
 # именем функции через запятую входной аргумент
 def call_function_from_str(str_function, dct, name):
-    if ',' in str_function:
-        function, arg = str_function.split(',') #№№
-        dct = eval(function)(dct, name, arg)
+
+    arg = None
+
+    if ':' in str_function:
+        function_name, arg = str_function.split(':') #How an argument should be put in config?
+        arg = arg.strip()
     else:
-        dct = eval(str_function)(dct, name)
+        function_name = str_function
+
+    try:
+        function = cleansing_functions[function_name]
+    except KeyError:
+        print("Specified Function Not Found")
+
+    if arg:
+        dct = function(dct, name, arg)
+    else:
+        dct = function(dct, name)
+
     return dct
 
 
@@ -42,13 +60,12 @@ def process(dct):
 
     return [dct] # Почему функция возвращает словарь в списке? Ни по чему, просто по тз так надо)
 
-
 if __name__ == '__main__':
 
     # Это конфиг вида "имя поля в словаре: функция, которую надо применить к значению"
     config = {'FirstName': ('trim_whitespaces',),
               'LastName': ('trim_whitespaces',),
-              'Address': ('skip_row_by_value,42', 'trim_whitespaces', 'remove_extra_whitespaces')}
+              'Address': ('skip_row_with_value: 42', 'trim_whitespaces', 'remove_extra_whitespaces')}
 
     # Словарь, который надо преобразовать. То есть:
     # к значению в полях "FirstName", "LastName", "Address" надо применить функцию trim_whitespaces,
