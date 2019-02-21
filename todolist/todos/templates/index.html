@@ -1,0 +1,12 @@
+{% include 'partials/header.html' %}
+    <ul>
+    {% for todo in todos %}
+      {% if not todo.is_done %}
+          <li><a href="/todos/details/{{todo.id}}">{{todo.title}}</a>: {{todo.text}}
+              <a href="{% url 'remove' todo.id %}"><input type=submit value="Close" /></a>
+          </li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+
+    {% include 'partials/footer.html' %}
