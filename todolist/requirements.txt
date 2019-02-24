@@ -1,2 +1,4 @@
+# Ant: Add versions of the packages
+
 Django
 mysql-python
