@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals  # Ant: You don't need to use this import
 
-from django.shortcuts import render, redirect
+from datetime import datetime
+
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 
-from .models import Todo  # Ant: Add full path to the module
+from todolist.models import Todo  # Ant: Add full path to the module
 
 def index(request):
     todos = Todo.objects.all()
@@ -12,12 +14,13 @@ def index(request):
     return render(request, 'index.html', context)
 
 def details(request, id):
-    todo = Todo.objects.get(id=id)  # Ant: if id will not be valid, exception raises, so you can use https://docs.djangoproject.com/en/2.2/topics/http/shortcuts/#get-object-or-404
+    #todo = Todo.objects.get(id=id)  # Ant: if id will not be valid, exception raises, so you can use https://docs.djangoproject.com/en/2.2/topics/http/shortcuts/#get-object-or-404
+    todo = get_object_or_404(Todo, id=id)
     context = {'todo': todo}
     return render(request, 'details.html', context)
 
 def add(request):
-    if(request.method=='POST'):  # Ant: brackets is in if statement is not pythonic style
+    if request.method=='POST':  # Ant: brackets is in if statement is not pythonic style
         title = request.POST['title']  # Ant: if request will not have this args, exception raises
         text = request.POST['text']  # Ant: Same as above
 
@@ -29,8 +32,10 @@ def add(request):
         return render(request, 'add.html')
 
 def remove(request, id):
-        todo = Todo.objects.get(id=id)  # Ant: Same as above
+        #todo = Todo.objects.get(id=id)  # Ant: Same as above
+        todo = get_object_or_404(Todo, id=id)
         todo.is_done = True
+        todo.closed_at = datetime.now()
         todo.save()
         #context = {'todos': todos}
         return redirect('/todos')

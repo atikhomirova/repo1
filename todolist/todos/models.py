@@ -10,6 +10,7 @@ class Todo(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_at = models.DateTimeField(default=datetime.now())
+    closed_at = models.DateTimeField(default=None)
     is_done = models.BooleanField(default=0)
 
     def __str__(self):
