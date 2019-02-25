@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals  # Ant: You don't need to use this import
-
 from datetime import datetime
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 
-from todolist.models import Todo  # Ant: Add full path to the module
+from todos.models import Todo  # Ant: Add full path to the module
 
 def index(request):
     todos = Todo.objects.all()
@@ -21,13 +19,13 @@ def details(request, id):
 
 def add(request):
     if request.method=='POST':  # Ant: brackets is in if statement is not pythonic style
-        title = request.POST['title']  # Ant: if request will not have this args, exception raises
-        text = request.POST['text']  # Ant: Same as above
+        title = request.POST.get('title')
+        text = request.POST.get('text')
 
-        todo = Todo(title=title, text=text)
-        todo.save()
-
-        return redirect('/todos')
+        if title and text:
+            todo = Todo(title=title, text=text)
+            todo.save()
+            return redirect('/todos')
     else:
         return render(request, 'add.html')
 
@@ -37,5 +35,4 @@ def remove(request, id):
         todo.is_done = True
         todo.closed_at = datetime.now()
         todo.save()
-        #context = {'todos': todos}
         return redirect('/todos')

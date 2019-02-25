@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'todolist',
         'USER': 'user123',
         'PASSWORD': '123456',
-        'HOST': 'db',
+        'HOST': '',
         'PORT': '3306'
     }
 }
