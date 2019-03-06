@@ -1,9 +1,13 @@
-FROM python:3.7.2-alpine3.9  # Ant: Use python 3.7
-
+FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir src/
-COPY requirements.txt src/
-WORKDIR /src/
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+RUN mkdir /code
+COPY requirements.txt code/
+WORKDIR /code
+COPY requirements.txt /code/
 RUN pip install -r requirements.txt
-ADD . /src/
+COPY . /code/
